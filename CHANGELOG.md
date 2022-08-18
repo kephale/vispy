@@ -1,5 +1,79 @@
 # Release Notes
 
+## [v0.11.0](https://github.com/vispy/vispy/tree/v0.11.0) (2022-07-04)
+
+**Enhancements:**
+
+- Reduce memory copies in LineVisual [\#2327](https://github.com/vispy/vispy/pull/2327) ([christiansandberg](https://github.com/christiansandberg))
+- Add shader interpolation methods for VolumeVisual [\#2322](https://github.com/vispy/vispy/pull/2322) ([brisvag](https://github.com/brisvag))
+- Add 'custom' ImageVisual interpolation with custom kernel on GPU [\#2319](https://github.com/vispy/vispy/pull/2319) ([brisvag](https://github.com/brisvag))
+
+**Fixed bugs:**
+
+- Fix clipping planes logic for `Volume` and `PlanesClipper` [\#2329](https://github.com/vispy/vispy/pull/2329) ([brisvag](https://github.com/brisvag))
+- Enable text depth testing [\#2328](https://github.com/vispy/vispy/pull/2328) ([almarklein](https://github.com/almarklein))
+- Fix HIDPI on pyglet [\#2326](https://github.com/vispy/vispy/pull/2326) ([almarklein](https://github.com/almarklein))
+- Add `blend_equation` \(add\) to GL\_PRESETS [\#2324](https://github.com/vispy/vispy/pull/2324) ([psobolewskiPhD](https://github.com/psobolewskiPhD))
+
+**Merged pull requests:**
+
+- Fix link to CHANGELOG.md in README.rst [\#2338](https://github.com/vispy/vispy/pull/2338) ([psobolewskiPhD](https://github.com/psobolewskiPhD))
+- Typo fix in docstring [\#2332](https://github.com/vispy/vispy/pull/2332) ([ksohan](https://github.com/ksohan))
+
+## [v0.10.0](https://github.com/vispy/vispy/tree/v0.10.0) (2022-04-18)
+
+**Enhancements:**
+
+- Add GL\_MIN/GL\_MAX constants for glBlendEquation [\#2320](https://github.com/vispy/vispy/pull/2320) ([djhoese](https://github.com/djhoese))
+- Add cutoff to mip and minip volume projection for fragment discard [\#2308](https://github.com/vispy/vispy/pull/2308) ([brisvag](https://github.com/brisvag))
+- Optimize shader regular expression compilation [\#2297](https://github.com/vispy/vispy/pull/2297) ([PydPiper](https://github.com/PydPiper))
+- Add ComplexImageVisual for viewing complex image data [\#1999](https://github.com/vispy/vispy/pull/1999) ([tlambert03](https://github.com/tlambert03))
+- Allow depth in Texture2D. [\#1310](https://github.com/vispy/vispy/pull/1310) ([keunhong](https://github.com/keunhong))
+
+**Fixed bugs:**
+
+- Set depth in `VolumeVisual` for `mip`/`minip`/`attenuated_mip` rendering modes [\#2305](https://github.com/vispy/vispy/pull/2305) ([alisterburt](https://github.com/alisterburt))
+
+**Merged pull requests:**
+
+- Fix typo in Nested Viewbox name in example [\#2321](https://github.com/vispy/vispy/pull/2321) ([jawjay](https://github.com/jawjay))
+- Expand docs on panzoom rect setter [\#2317](https://github.com/vispy/vispy/pull/2317) ([dstansby](https://github.com/dstansby))
+- Cleanup debug logic in line draw example [\#2306](https://github.com/vispy/vispy/pull/2306) ([olinickalls](https://github.com/olinickalls))
+
+## [v0.9.6](https://github.com/vispy/vispy/tree/v0.9.6) (2022-02-04)
+
+**Fixed bugs:**
+
+- Fix TypeError for membership test of KeyboardModifiers [\#2293](https://github.com/vispy/vispy/pull/2293) ([rayg-ssec](https://github.com/rayg-ssec))
+
+## [v0.9.5](https://github.com/vispy/vispy/tree/v0.9.5) (2022-02-04)
+
+**Fixed bugs:**
+
+- Set depth buffer in Volume plane rendering [\#2289](https://github.com/vispy/vispy/pull/2289) ([brisvag](https://github.com/brisvag))
+- Fix numpy error with array edge\_width in Markers [\#2285](https://github.com/vispy/vispy/pull/2285) ([brisvag](https://github.com/brisvag))
+- Fix touch event handling issue for Qt6-based backends [\#2284](https://github.com/vispy/vispy/pull/2284) ([mars0001](https://github.com/mars0001))
+- remove utf-8 encode in \_vispy\_set\_title [\#2269](https://github.com/vispy/vispy/pull/2269) ([Llewyllen](https://github.com/Llewyllen))
+
+**Merged pull requests:**
+
+- MNT: add documentation of usage of Triangle/triangle, see \#1029 [\#2268](https://github.com/vispy/vispy/pull/2268) ([kmuehlbauer](https://github.com/kmuehlbauer))
+- Add typing to `create_visual_node` [\#2264](https://github.com/vispy/vispy/pull/2264) ([tlambert03](https://github.com/tlambert03))
+
+## [v0.9.4](https://github.com/vispy/vispy/tree/v0.9.4) (2021-11-24)
+
+**Fixed bugs:**
+
+- Fix MeshNormals and WireframeFilter with empty MeshData [\#2262](https://github.com/vispy/vispy/pull/2262) ([brisvag](https://github.com/brisvag))
+- Update clims in color transform whenever texture.\_data\_limits changes [\#2245](https://github.com/vispy/vispy/pull/2245) ([tlambert03](https://github.com/tlambert03))
+
+**Merged pull requests:**
+
+- Clarified docstring for ArrowVisual [\#2261](https://github.com/vispy/vispy/pull/2261) ([pauljurczak](https://github.com/pauljurczak))
+- Use stacklevel in DeprecationWarnings. [\#2257](https://github.com/vispy/vispy/pull/2257) ([Carreau](https://github.com/Carreau))
+- Add optional dependencies section to installation instructions [\#2251](https://github.com/vispy/vispy/pull/2251) ([pauljurczak](https://github.com/pauljurczak))
+- Add table for list of backend supported [\#2246](https://github.com/vispy/vispy/pull/2246) ([anirudhbagri](https://github.com/anirudhbagri))
+
 ## [v0.9.3](https://github.com/vispy/vispy/tree/v0.9.3) (2021-10-27)
 
 **Fixed bugs:**

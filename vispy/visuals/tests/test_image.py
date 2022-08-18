@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest import mock
 
-from vispy.scene.visuals import Image
+from vispy.scene import Image, PanZoomCamera
 from vispy.testing import (requires_application, TestingCanvas,
                            run_tests_if_main, IS_CI)
 from vispy.testing.image_tester import assert_image_approved, downsample
@@ -261,6 +261,91 @@ def test_image_vertex_updates():
             image.set_data(data)
             c.render()
             build_vertex_mock.assert_called_once()
+
+
+@requires_application()
+@pytest.mark.parametrize(
+    ("dtype", "init_clim"),
+    [
+        (np.float32, "auto"),
+        (np.float32, (0, 5)),
+        (np.uint8, "auto"),
+        (np.uint8, (0, 5)),
+    ]
+)
+def test_change_clim_float(dtype, init_clim):
+    """Test that with an image of floats, clim is correctly set from the first try.
+
+    See https://github.com/vispy/vispy/pull/2245.
+    """
+    size = (40, 40)
+    np.random.seed(0)
+    data = (np.random.rand(*size) * 100).astype(dtype)
+
+    with TestingCanvas(size=size[::-1], bgcolor="w") as c:
+        image = Image(data=data, clim=init_clim, parent=c.scene)
+
+        # needed to properly initialize the canvas
+        c.render()
+
+        image.clim = 0, 10
+        rendered1 = c.render()
+        # set clim to same values
+        image.clim = 0, 10
+        rendered2 = c.render()
+
+        assert np.allclose(rendered1, rendered2)
+
+
+@requires_application()
+def test_image_interpolation():
+    """Test different interpolations"""
+    size = (81, 81)
+    data = np.array([[0, 1]], dtype=int)
+    # we need to avoid the edges because the canvas adds a white border of 1 px
+    left = (40, 10)
+    right = (40, 71)
+    center_left = (40, 39)
+    center = (40, 40)
+    center_right = (40, 41)
+    white = (255, 255, 255, 255)
+    black = (0, 0, 0, 255)
+    gray = (128, 128, 128, 255)
+
+    with TestingCanvas(size=size[::-1], bgcolor="w") as c:
+        view = c.central_widget.add_view()
+        view.camera = PanZoomCamera((0, 0, 2, 1))
+        image = Image(data=data, cmap='grays',
+                      parent=view.scene)
+
+        # needed to properly initialize the canvas
+        render = c.render()
+
+        image.interpolation = 'nearest'
+        render = c.render()
+        assert np.allclose(render[left], black)
+        assert np.allclose(render[right], white)
+        assert np.allclose(render[center_left], black)
+        assert np.allclose(render[center_right], white)
+
+        image.interpolation = 'bilinear'
+        render = c.render()
+        assert np.allclose(render[left], black)
+        assert np.allclose(render[right], white)
+        assert np.allclose(render[center], gray, atol=5)  # we just want gray, this is not quantitative
+
+        image.interpolation = 'custom'
+        image.custom_kernel = np.array([[0]])  # no sampling
+        render = c.render()
+        assert np.allclose(render[left], white)
+        assert np.allclose(render[right], white)
+        assert np.allclose(render[center], white)
+
+        image.custom_kernel = np.array([[1]])  # same as linear
+        render = c.render()
+        assert np.allclose(render[left], black)
+        assert np.allclose(render[right], white)
+        assert np.allclose(render[center], gray, atol=5)  # we just want gray, this is not quantitative
 
 
 run_tests_if_main()

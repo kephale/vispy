@@ -29,7 +29,7 @@ jobs:
     - name: Install OpenGL
       run: |
         sudo apt-get update
-        sudo apt-get -y install libglu1-mesa-dev libgl1-mesa-dev libxi-dev libglfw3-dev libgles2-mesa-dev libsdl2-2.0-0 mesa-utils
+        sudo apt-get -y install libglu1-mesa-dev libgl1-mesa-dev libxi-dev libglfw3-dev libgles2-mesa-dev libsdl2-2.0-0 mesa-utils x11-utils
     - name: Start xvfb daemon
       run: |
         export DISPLAY=:99.0
@@ -39,6 +39,11 @@ jobs:
       run: |
         export DISPLAY=:99.0
         glxinfo
+    - name: Check Display Information
+      run: |
+        export DISPLAY=:99.0
+        xdpyinfo
+
   # linter, style checks, etc
   lint:
     name: lint and style checks
@@ -98,7 +103,7 @@ jobs:
         sudo apt-get update;
         cat ci/requirements/linux_full_deps_apt.txt | xargs sudo apt-get -y install
         # Additional latex dependencies
-        sudo apt-get -y install texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
+        sudo apt-get -y install texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
         sudo apt-get -y install dvipng
         # Start xvfb daemon
         export DISPLAY=:99.0
@@ -215,6 +220,8 @@ jobs:
           else
             cat ci/requirements/linux_full_deps_apt.txt | xargs sudo apt-get -y install
           fi
+        else
+          sudo apt-get -y install x11-utils
         fi
         # Start xvfb daemon
         export DISPLAY=:99.0
@@ -267,6 +274,8 @@ jobs:
         if [ "${{ matrix.test }}" == 'examples' ]; then
           export DISPLAY=:99.0
           export XDG_RUNTIME_DIR=/tmp/runtime-runner
+          mkdir -p $XDG_RUNTIME_DIR
+          chmod 0700 $XDG_RUNTIME_DIR
           make examples
         fi
         if [ "${{ matrix.test }}" == 'osmesa' ]; then

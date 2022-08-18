@@ -78,7 +78,8 @@ class BaseTexture(GLObject):
         'luminance_alpha': 2,
         'rg': 2,
         'rgb': 3,
-        'rgba': 4
+        'rgba': 4,
+        'depth_component': 1,
     }
 
     # NOTE: non-normalized formats ending with 'i' and 'ui' are currently
@@ -96,7 +97,8 @@ class BaseTexture(GLObject):
         ('luminance_alpha', 2),
         ('rg', 2),
         ('rgb', 3),
-        ('rgba', 4)
+        ('rgba', 4),
+        ('depth_component', 1),
     ])
 
     def __init__(self, data=None, format=None, resizable=True,
@@ -105,9 +107,12 @@ class BaseTexture(GLObject):
         GLObject.__init__(self)
         if resizeable is not None:
             resizable = resizeable
-            warnings.warn('resizeable has been deprecated in favor of '
-                          'resizable and will be removed next release',
-                          DeprecationWarning)
+            warnings.warn(
+                "resizeable has been deprecated in favor of "
+                "resizable and will be removed next release",
+                DeprecationWarning,
+                stacklevel=2,
+            )
 
         # Init shape and format
         self._resizable = True  # at least while we're in init
