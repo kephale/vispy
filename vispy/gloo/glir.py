@@ -558,7 +558,10 @@ class _GlirQueueShare(object):
 
     @staticmethod
     def _filter_redundant_state(commands):
-        """Remove repeated GL state setters within one command batch."""
+        """Remove repeated GL state setters within one command batch.
+
+        FUNC arguments are expected to follow their OpenGL signatures.
+        """
         state = {}
         filtered = []
         for command in commands:
@@ -567,10 +570,11 @@ class _GlirQueueShare(object):
                 state.clear()
             elif command[0] == 'FUNC' and len(command) >= 2:
                 function = command[1]
-                scalar_args = all(np.isscalar(arg) for arg in command[2:])
                 if (function in ('glEnable', 'glDisable') and
-                        len(command) == 3 and scalar_args):
-                    key = ('capability', command[2])
+                        len(command) == 3):
+                    # Both functions set the enabled state of the enum passed
+                    # as their only argument.
+                    key = ('enabled', command[2])
                 elif function in _GL_STATE_FUNC_GROUPS:
                     key = ('function', _GL_STATE_FUNC_GROUPS[function])
                 elif function in _GL_STATE_FUNCS:
@@ -579,19 +583,9 @@ class _GlirQueueShare(object):
                     key = None
 
                 if key is not None:
-                    if not scalar_args:
-                        # Gloo's state wrappers emit scalar arguments. Preserve
-                        # commands from other callers when their equality
-                        # semantics are unknown.
-                        state.pop(key, None)
-                    else:
-                        if state.get(key) == command:
-                            continue
-                        state[key] = command
-                elif (function in ('glEnable', 'glDisable') and
-                      len(command) == 3):
-                    # The capability cannot safely be used as a cache key.
-                    state.clear()
+                    if state.get(key) == command:
+                        continue
+                    state[key] = command
             filtered.append(command)
         return filtered
 

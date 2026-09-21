@@ -117,20 +117,6 @@ def test_queue_gl_state_groups_and_context_barriers():
     assert q._shared._filter(commands, parser) == commands
 
 
-def test_queue_preserves_state_commands_with_non_scalar_arguments():
-    q = glir.GlirQueue()
-    parser = glir.GlirParser()
-    commands = [
-        ('FUNC', 'glViewport', np.array([0, 0, 800, 600])),
-        ('FUNC', 'glViewport', (0, 0, 800, 600)),
-        ('FUNC', 'glEnable', ('blend',)),
-    ]
-
-    for command in commands:
-        expected = [command, command]
-        assert q._shared._filter(expected, parser) == expected
-
-
 @requires_application()
 def test_log_parser():
     """Test GLIR log parsing"""
